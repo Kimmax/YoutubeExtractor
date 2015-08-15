@@ -213,9 +213,17 @@ namespace YoutubeExtractor
 
         private static string GetAdaptiveStreamMap(JObject json)
         {
-            JToken streamMap = json["args"]["adaptive_fmts"];
-
-            return streamMap.ToString();
+            JToken streamMap;
+            try
+            {
+                streamMap = json["args"]["adaptive_fmts"];
+                return streamMap.ToString();
+            }
+            catch
+            {
+                streamMap = json["args"]["url_encoded_fmt_stream_map"];
+                return streamMap.ToString();
+            }
         }
 
         private static string GetDecipheredSignature(string htmlPlayerVersion, string signature)
