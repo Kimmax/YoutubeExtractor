@@ -56,7 +56,7 @@ namespace YoutubeExtractor {
 
                             copiedBytes += bytes;
 
-                            var eventArgs = new ProgressEventArgs(copiedBytes, (copiedBytes * 1.0 / response.ContentLength) * 100);
+                            var eventArgs = new ProgressEventArgs((copiedBytes * 1.0 / response.ContentLength) * 100);
 
                             if (this.DownloadProgressChanged != null) {
                                 this.DownloadProgressChanged(this, eventArgs);
