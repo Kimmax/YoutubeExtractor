@@ -74,6 +74,7 @@ namespace YoutubeExtractor
                 this.ExtractAudio(tempPath);
             }
 
+            File.Delete(tempPath);
             this.OnDownloadFinished(EventArgs.Empty);
         }
 
@@ -106,7 +107,7 @@ namespace YoutubeExtractor
                     this.AudioExtractionProgressChanged(this, new ProgressEventArgs(progressPercent));
                 }
             };
-
+          
             converter.ConvertMedia(path, this.SavePath, this.Video.AudioExtension);
         }
     }
