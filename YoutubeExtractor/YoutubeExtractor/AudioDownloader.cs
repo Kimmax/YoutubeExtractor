@@ -107,8 +107,8 @@ namespace YoutubeExtractor
                     this.AudioExtractionProgressChanged(this, new ProgressEventArgs(progressPercent));
                 }
             };
-          
-            converter.ConvertMedia(path, this.SavePath, this.Video.AudioExtension);
+
+            converter.ConvertMedia(path, this.SavePath, "mp3");
         }
     }
 }
