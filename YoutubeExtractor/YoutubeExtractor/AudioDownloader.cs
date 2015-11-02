@@ -32,6 +32,7 @@ namespace YoutubeExtractor
     public class AudioDownloader : Downloader
     {
         private bool isCanceled;
+        private string outputFormat;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioDownloader"/> class.
@@ -40,9 +41,11 @@ namespace YoutubeExtractor
         /// <param name="savePath">The path to save the audio.</param>
         /// /// <param name="bytesToDownload">An optional value to limit the number of bytes to download.</param>
         /// <exception cref="ArgumentNullException"><paramref name="video"/> or <paramref name="savePath"/> is <c>null</c>.</exception>
-        public AudioDownloader(VideoInfo video, string savePath, int? bytesToDownload = null)
+        public AudioDownloader(VideoInfo video, string savePath, string outputFormat = "mp3", int? bytesToDownload = null)
             : base(video, savePath, bytesToDownload)
-        { }
+        {
+            this.outputFormat = outputFormat;
+        }
 
         /// <summary>
         /// Occurs when the progress of the audio extraction has changed.
@@ -71,7 +74,7 @@ namespace YoutubeExtractor
 
             if (!this.isCanceled)
             {
-                this.ExtractAudio(tempPath);
+                this.ExtractAudio(tempPath, this.outputFormat);
             }
 
             File.Delete(tempPath);
@@ -95,7 +98,7 @@ namespace YoutubeExtractor
             videoDownloader.Execute();
         }
 
-        private void ExtractAudio(string path)
+        private void ExtractAudio(string path, string outputFormat)
         {
             FFMpegConverter converter = new FFMpegConverter();
 
@@ -108,7 +111,7 @@ namespace YoutubeExtractor
                 }
             };
 
-            converter.ConvertMedia(path, this.SavePath, "mp3");
+            converter.ConvertMedia(path, this.SavePath, outputFormat);
         }
     }
 }
