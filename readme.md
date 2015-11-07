@@ -1,4 +1,5 @@
-# YoutubeExtractor  /* Out of date - Added much more*/
+# YoutubeExtractor
+/* Out of date - Added much more*/
 ## Overview
 YoutubeExtractor is a library for .NET, written in C#, that allows to download videos from YouTube and/or extract their audio track (audio extraction currently only for flash videos).
 
@@ -15,7 +16,8 @@ Note that Windows Phone 8, WinRT, Xamarin.Android and Xamarin.iOS only support t
 ## License
 The YouTube URL-extraction code is licensed under the [MIT License](http://opensource.org/licenses/MIT)
 
-## Example code /* Out of date */
+## Example code
+/* Out of date */
 
 **Get the download URLs**
 
