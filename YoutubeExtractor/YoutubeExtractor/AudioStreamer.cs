@@ -32,7 +32,7 @@ namespace YoutubeExtractor
             WaveOut player = new WaveOut(); 
             player.Init(reader);
             player.Play();
-
+            
             while(player.PlaybackState != PlaybackState.Stopped)
             {
                 if (this.StreamPositionChanged != null)
@@ -42,6 +42,8 @@ namespace YoutubeExtractor
 
             if(this.StreamFinished != null)
                 this.StreamFinished(this, EventArgs.Empty);
+
+            player.Dispose();
         }
     }
 }
