@@ -180,8 +180,6 @@ namespace YoutubeExtractor {
 
         private static IEnumerable<ExtractionInfo> ExtractDownloadUrls(JObject json) {
             string[] splitByUrls = GetStreamMap(json).Split(',');
-            string[] adaptiveFmtSplitByUrls = GetAdaptiveStreamMap(json).Split(',');
-            splitByUrls = splitByUrls.Concat(adaptiveFmtSplitByUrls).ToArray();
 
             foreach (string s in splitByUrls) {
                 IDictionary<string, string> queries = HttpHelper.ParseQueryString(s);
@@ -213,6 +211,7 @@ namespace YoutubeExtractor {
             }
         }
 
+<<<<<<< HEAD
         /// <summary>
         /// Extracts the signature from the DASH Manifest which is located after /s/.
         /// </summary>
@@ -229,6 +228,14 @@ namespace YoutubeExtractor {
 
         private static string GetAdaptiveStreamMap(JObject json) {
             JToken streamMap = json["args"]["adaptive_fmts"];
+=======
+        private static string GetDecipheredSignature(string htmlPlayerVersion, string signature)
+        {
+            if (signature.Length == CorrectSignatureLength)
+            {
+                return signature;
+            }
+>>>>>>> c239d7536ab26752f0b6e9fdaabc9a6583b891d9
 
             if (streamMap != null)
                 return streamMap.ToString();
@@ -264,7 +271,25 @@ namespace YoutubeExtractor {
 
                 int formatCode = int.Parse(Params["itag"]);
 
+<<<<<<< HEAD
                 VideoInfo info = GetSingleVideoInfo(formatCode, extractionInfo.Uri.ToString(), videoTitle, extractionInfo.RequiresDecryption);
+=======
+                if (info != null)
+                {
+                    info = new VideoInfo(info) {
+                        DownloadUrl = extractionInfo.Uri.ToString(),
+                        Title = videoTitle,
+                        RequiresDecryption = extractionInfo.RequiresDecryption
+                    };
+                }
+
+                else
+                {
+                    info = new VideoInfo(formatCode) {
+                        DownloadUrl = extractionInfo.Uri.ToString()
+                    };
+                }
+>>>>>>> c239d7536ab26752f0b6e9fdaabc9a6583b891d9
 
                 downLoadInfos.Add(info);
             }
