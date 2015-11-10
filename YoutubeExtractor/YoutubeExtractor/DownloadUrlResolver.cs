@@ -103,16 +103,6 @@ namespace YoutubeExtractor {
 
                 string htmlPlayerVersion = GetHtml5PlayerVersion(json);
 
-                // Query dash manifest URL for additional formats
-                if (!string.IsNullOrEmpty(dashManifestUrl)) {
-                    string signature = ExtractSignatureFromManifest(dashManifestUrl);
-                    if (!string.IsNullOrEmpty(signature)) {
-                        string decrypt = DecryptSignature(signature, htmlPlayerVersion);
-                        dashManifestUrl = dashManifestUrl.Replace(signature, decrypt).Replace("/s/", "/signature/");
-                    }
-                    ParseDashManifest(dashManifestUrl, infos, videoTitle);
-                }
-
                 foreach (VideoInfo info in infos) {
                     info.HtmlPlayerVersion = htmlPlayerVersion;
 
@@ -211,40 +201,18 @@ namespace YoutubeExtractor {
             }
         }
 
-<<<<<<< HEAD
-        /// <summary>
-        /// Extracts the signature from the DASH Manifest which is located after /s/.
-        /// </summary>
-        /// <param name="manifestUrl">The DASH Manifest URL to extract from.</param>
-        /// <returns>The extracted signature.</returns>
-        private static string ExtractSignatureFromManifest(string manifestUrl) {
-            string[] Params = manifestUrl.Split('/');
-            for (int i = 0; i < Params.Length; i++) {
-                if (Params[i] == "s" && i < Params.Length - 1)
-                    return Params[i + 1];
-            }
-            return string.Empty;
-        }
-
-        private static string GetAdaptiveStreamMap(JObject json) {
-            JToken streamMap = json["args"]["adaptive_fmts"];
-=======
         private static string GetDecipheredSignature(string htmlPlayerVersion, string signature)
         {
             if (signature.Length == CorrectSignatureLength)
             {
                 return signature;
             }
->>>>>>> c239d7536ab26752f0b6e9fdaabc9a6583b891d9
 
-            if (streamMap != null)
-                return streamMap.ToString();
-            else
-                return string.Empty;
+            return Decipherer.DecipherWithVersion(signature, htmlPlayerVersion);
         }
 
         private static string GetHtml5PlayerVersion(JObject json) {
-            var regex = new Regex(@"player-.*\.js");
+            var regex = new Regex(@"player-(.*\.js)");
 
             string js = json["assets"]["js"].ToString();
 
@@ -271,9 +239,8 @@ namespace YoutubeExtractor {
 
                 int formatCode = int.Parse(Params["itag"]);
 
-<<<<<<< HEAD
-                VideoInfo info = GetSingleVideoInfo(formatCode, extractionInfo.Uri.ToString(), videoTitle, extractionInfo.RequiresDecryption);
-=======
+                VideoInfo info = VideoInfo.Defaults.SingleOrDefault(videoInfo => videoInfo.FormatCode == formatCode);
+
                 if (info != null)
                 {
                     info = new VideoInfo(info) {
@@ -289,7 +256,6 @@ namespace YoutubeExtractor {
                         DownloadUrl = extractionInfo.Uri.ToString()
                     };
                 }
->>>>>>> c239d7536ab26752f0b6e9fdaabc9a6583b891d9
 
                 downLoadInfos.Add(info);
             }
