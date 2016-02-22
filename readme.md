@@ -1,13 +1,5 @@
 # YoutubeExtractor
-
-<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=daume%2edennis%40gmail%2ecom&lc=US&item_name=YoutubeExtractor&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHostedGuest">
-  <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" title="Donate via Paypal" />
-</a>
-
-<a href="http://flattr.com/thing/1093085/" target="_blank">
-<img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" />
-</a>
-
+/* Out of date - Added much more*/
 ## Overview
 YoutubeExtractor is a library for .NET, written in C#, that allows to download videos from YouTube and/or extract their audio track (audio extraction currently only for flash videos).
 
@@ -21,27 +13,11 @@ YoutubeExtractor is a library for .NET, written in C#, that allows to download v
 
 Note that Windows Phone 8, WinRT, Xamarin.Android and Xamarin.iOS only support the extraction of the download URLs
 
-## NuGet
-
-[YoutubeExtractor at NuGet](http://nuget.org/packages/YoutubeExtractor)
-
-    Install-Package YoutubeExtractor
-
 ## License
-
-YoutubeExtractor has two licenses;
-
 The YouTube URL-extraction code is licensed under the [MIT License](http://opensource.org/licenses/MIT)
 
-The audio extraction code that is originally from [FlvExtract](http://moitah.net/) is licenced under the [GNU General Public License version 2 (GPLv2)](http://opensource.org/licenses/gpl-2.0)
-
-Files that are GPLv2 licensed are explicitly marked with the GPLv2 header at the top of the file. All other files are implicitly MIT licensed.
-
-## Credits
-
-- [FlvExtract](http://moitah.net/) for extracting MP3 and AAC audio tracks out of flash files.
-
 ## Example code
+/* Out of date */
 
 **Get the download URLs**
 

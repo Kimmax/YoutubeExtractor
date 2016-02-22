@@ -22,6 +22,7 @@
 using System;
 using System.IO;
 using System.Net;
+using NReco.VideoConverter;
 
 namespace YoutubeExtractor
 {
@@ -31,6 +32,7 @@ namespace YoutubeExtractor
     public class AudioDownloader : Downloader
     {
         private bool isCanceled;
+        private string outputFormat;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioDownloader"/> class.
@@ -39,9 +41,11 @@ namespace YoutubeExtractor
         /// <param name="savePath">The path to save the audio.</param>
         /// /// <param name="bytesToDownload">An optional value to limit the number of bytes to download.</param>
         /// <exception cref="ArgumentNullException"><paramref name="video"/> or <paramref name="savePath"/> is <c>null</c>.</exception>
-        public AudioDownloader(VideoInfo video, string savePath, int? bytesToDownload = null)
+        public AudioDownloader(VideoInfo video, string savePath, string outputFormat = "mp3", int? bytesToDownload = null)
             : base(video, savePath, bytesToDownload)
-        { }
+        {
+            this.outputFormat = outputFormat;
+        }
 
         /// <summary>
         /// Occurs when the progress of the audio extraction has changed.
@@ -61,7 +65,6 @@ namespace YoutubeExtractor
         /// - or -
         /// The audio file could not be created.
         /// </exception>
-        /// <exception cref="AudioExtractionException">An error occured during audio extraction.</exception>
         /// <exception cref="WebException">An error occured while downloading the video.</exception>
         public override void Execute()
         {
@@ -71,9 +74,10 @@ namespace YoutubeExtractor
 
             if (!this.isCanceled)
             {
-                this.ExtractAudio(tempPath);
+                this.ExtractAudio(tempPath, this.outputFormat);
             }
 
+            File.Delete(tempPath);
             this.OnDownloadFinished(EventArgs.Empty);
         }
 
@@ -94,20 +98,20 @@ namespace YoutubeExtractor
             videoDownloader.Execute();
         }
 
-        private void ExtractAudio(string path)
+        private void ExtractAudio(string path, string outputFormat)
         {
-            using (var flvFile = new FlvFile(path, this.SavePath))
-            {
-                flvFile.ConversionProgressChanged += (sender, args) =>
-                {
-                    if (this.AudioExtractionProgressChanged != null)
-                    {
-                        this.AudioExtractionProgressChanged(this, new ProgressEventArgs(args.ProgressPercentage));
-                    }
-                };
+            FFMpegConverter converter = new FFMpegConverter();
 
-                flvFile.ExtractStreams();
-            }
+            converter.ConvertProgress += (sender, args) =>
+            {
+                if (this.AudioExtractionProgressChanged != null)
+                {
+                    double progressPercent = args.Processed.TotalSeconds / args.TotalDuration.TotalSeconds * 100;
+                    this.AudioExtractionProgressChanged(this, new ProgressEventArgs(progressPercent));
+                }
+            };
+
+            converter.ConvertMedia(path, this.SavePath, outputFormat);
         }
     }
 }
