@@ -82,6 +82,7 @@ publish
 # NuGet Packages Directory
 packages
 *.nupkg
+lib/nugets/*
 
 # Windows Azure Build Output
 csx
