@@ -1,24 +1,11 @@
-# YoutubeExtractor
-/* Out of date - Added much more*/
+# SYMMExtractor
 ## Overview
-YoutubeExtractor is a library for .NET, written in C#, that allows to download videos from YouTube and/or extract their audio track (audio extraction currently only for flash videos).
-
-## Target platforms
-
-- .NET Framework 3.5 and higher
-- Windows Phone 8
-- WinRT
-- Xamarin.Android
-- Xamarin.iOS
-
-Note that Windows Phone 8, WinRT, Xamarin.Android and Xamarin.iOS only support the extraction of the download URLs
+YoutubeExtractor is a library for .NET, written in C#, that allows to download videos from YouTube and/or extract their audio track with varius options regarding the audio quality. You can also directly stream audio only of the video.
 
 ## License
 The YouTube URL-extraction code is licensed under the [MIT License](http://opensource.org/licenses/MIT)
 
 ## Example code
-/* Out of date */
-
 **Get the download URLs**
 
 ```c#
@@ -109,3 +96,43 @@ audioDownloader.AudioExtractionProgressChanged += (sender, args) => Console.Writ
 audioDownloader.Execute();
 
 ```
+
+**Stream the audio track**
+
+```c#
+
+/*
+ * We want the first extractable video with the highest audio quality.
+ */
+VideoInfo video = videoInfos
+    .Where(info => info.CanExtractAudio)
+    .OrderByDescending(info => info.AudioBitrate)
+    .First();
+    
+/*
+ * If the video has a decrypted signature, decipher it
+ */
+if (video.RequiresDecryption)
+{
+    DownloadUrlResolver.DecryptDownloadUrl(video);
+}
+
+/*
+ * Create the audio streaner.
+ * The first argument is the video where the audio should be streamed from.
+ */
+var audioStreamer = new AduioStreamer(video);
+
+// Register the progress events
+audioStreamer.StreamStarted += (sender, args) => Console.WriteLine("Audio streaming started!");
+audioStreamer.AudioExtractionProgressChanged += (sender, args) => 
+{
+    Console.SetCursorPosition(0, Console.CursorTop);
+    Console.Write("{0}%", args.ProgressPercentage);
+}
+
+/*
+ * Execute the audio downloader.
+ * For GUI applications note, that this method runs synchronously. And will block until the stream ist finished.
+ */
+audioDownloader.Execute();
